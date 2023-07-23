@@ -1,3 +1,4 @@
+```bash
 terraform {
   required_providers {
     yandex = {
@@ -176,7 +177,7 @@ resource "yandex_alb_backend_group" "backend-group" {
 }
 
 # Load balancer
-
+```bash
 
 
 
