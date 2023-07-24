@@ -110,6 +110,37 @@ output "external_ip_address_vm_2" {
   value = yandex_compute_instance.vm-2.network_interface.0.nat_ip_address
 }
 
+### Elastick
+
+resource "yandex_compute_instance" "vm-3" {
+  name        = "Elastick-vm"
+  platform_id = "standard-v3"
+  zone        = "ru-central1-b"
+
+  resources {
+    cores  = "4"
+    memory = "12"
+  }
+
+  boot_disk {
+    initialize_params {
+      image_id = "fd861l8ckd35g2rrhsfd"
+      size =  60
+    }
+  }
+
+network_interface {
+    subnet_id = yandex_vpc_subnet.subnet2.id
+     nat       = true
+   # ip_address = 192.168.0.20/24
+   # ipv4      = true
+  }
+metadata = {
+    user-data = "${file("./meta.txt")}"
+  }
+}
+
+
 # HTTP router
 
 resource "yandex_alb_http_router" "tf-router" {
@@ -124,7 +155,8 @@ resource "yandex_alb_http_router" "tf-router" {
 resource "yandex_alb_virtual_host" "my-virtual-host" {
   name           = "my-virtual-host"
   http_router_id = "${yandex_alb_http_router.tf-router.id}"
-  route {
+
+ route {
     name = "my-route"
 http_route {
       http_route_action {
@@ -177,6 +209,46 @@ resource "yandex_alb_backend_group" "backend-group" {
 }
 
 # Load balancer
+
+resource "yandex_alb_load_balancer" "balancer" {
+  name        = "balancer"
+  network_id  = yandex_vpc_network.network1.id
+  allocation_policy {
+    location {
+      zone_id   = "ru-central1-a"
+      subnet_id = yandex_vpc_subnet.subnet1.id
+    }
+  }
+
+  listener {
+    name = "my-listener"
+    endpoint {
+      address {
+        external_ipv4_address {
+        }
+      }
+      ports = [ 80 ]
+    }
+    http {
+      handler {
+        http_router_id = "${yandex_alb_http_router.tf-router.id}"
+      }
+    }
+  }
+
+  log_options {
+    log_group_id = ""
+    discard_rule {
+      http_codes          = ["200"]
+      http_code_intervals = ["ALL"]
+      grpc_codes          = ["GRPC_OK"]
+      discard_percent     = 50
+    }
+  }
+}
+
+
+
 ```bash
 
 
