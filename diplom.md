@@ -13,7 +13,6 @@ cloud_id  = "b1gdqrsimkog95ftf7a6"
 folder_id = "b1g6v0h3tgtvb9189u9c"
 zone      = "ru-central1-c"
 }
-### Nginx1 vm zone "c"
 resource "yandex_compute_instance" "Nginx1" {
   name        = "Nginx1"
   platform_id = "standard-v3"
@@ -34,7 +33,6 @@ resource "yandex_compute_instance" "Nginx1" {
   network_interface {
     subnet_id = yandex_vpc_subnet.subnet2.id
     nat       = true
-    #ip_address = "192.168.0.10/24"
     ipv4      = true
   }
 
@@ -53,12 +51,6 @@ resource "yandex_vpc_subnet" "subnet2" {
   network_id     = yandex_vpc_network.network1.id
   v4_cidr_blocks = ["10.2.0.0/24"]
 }
-#output "internal_ip_address_vm_1" {
-#  value = yandex_compute_instance.vm-1.network_interface.0.ip_address
-#  value = yandex_compute_instance.vm-1.network_interface.0.nat_ip_address
-#}
-
-### Nginx2 vm zone "b"
 
 resource "yandex_compute_instance" "Nginx2"{
   name        = "Nginx2-vm"
@@ -80,7 +72,6 @@ resource "yandex_compute_instance" "Nginx2"{
   network_interface {
     subnet_id = yandex_vpc_subnet.subnet2.id
     nat       = true
-    #ip_address = "192.168.0.20/24"
     ipv4      = true
   }
 
@@ -88,15 +79,6 @@ resource "yandex_compute_instance" "Nginx2"{
   user-data = "${file("./meta.txt")}"
   }
 }
-
-#output "internal_ip_address_vm_2" {
-#  value = yandex_compute_instance.vm-2.network_interface.0.ip_address
-#}
-#output "external_ip_address_vm_2" {
-#  value = yandex_compute_instance.vm-2.network_interface.0.nat_ip_address
-#}
-
-### Elastick
 
 resource "yandex_compute_instance" "Elastick" {
   name        = "Elastick-vm"
@@ -118,7 +100,6 @@ resource "yandex_compute_instance" "Elastick" {
 network_interface {
     subnet_id = yandex_vpc_subnet.subnet2.id
      nat       = true
-     #ip_address = "192.168.0.30/24"
      ipv4      = true
   }
 
@@ -127,7 +108,6 @@ network_interface {
    }
  }
 
-### HTTP router
 
 resource "yandex_alb_http_router" "tf-router" {
   name          = "my-http-router"
@@ -154,7 +134,6 @@ resource "yandex_alb_virtual_host" "my-virtual-host" {
   }
 }
 
-### Target group
 
 resource "yandex_alb_target_group" "target-group" {
   name           = "my-target-group"
@@ -169,7 +148,6 @@ resource "yandex_alb_target_group" "target-group" {
   }
 }
 
-### Backend Group
 
 resource "yandex_alb_backend_group" "backend-group" {
   name      = "my-backend-group"
@@ -193,7 +171,6 @@ resource "yandex_alb_backend_group" "backend-group" {
   }
 }
 
-### Load balancer
 
 resource "yandex_alb_load_balancer" "balancer" {
   name        = "balancer"
@@ -225,14 +202,12 @@ resource "yandex_alb_load_balancer" "balancer" {
     log_group_id = ""
     discard_rule {
       http_codes          = ["200"]
-      #http_code_intervals = ["2XX"]
-      #grpc_codes          = ["GRPC_OK"]
       discard_percent     = 50
     }
   }
 }
 
-### Zabbix
+
 
 resource "yandex_compute_instance" "Zabbix" {
   name        = "Zabbix-vm"
@@ -276,8 +251,6 @@ output "external_ip_address_Zabbix" {
   value = yandex_compute_instance.Zabbix.network_interface.0.nat_ip_address
 }
 
-### Kibana
-
 resource "yandex_compute_instance" "Kibana" {
   name        = "Kibana-vm"
   platform_id = "standard-v3"
@@ -311,7 +284,7 @@ output "internal_ip_address_Kibana" {
 }
 output "external_ip_address_Kibana" {
   value = yandex_compute_instance.Kibana.network_interface.0.nat_ip_address
-}
+} 
 
 
 
