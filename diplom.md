@@ -13,7 +13,6 @@ cloud_id  = "b1gdqrsimkog95ftf7a6"
 folder_id = "b1g6v0h3tgtvb9189u9c"
 zone      = "ru-central1-c"
 }
-
 ### Nginx1 vm zone "c"
 resource "yandex_compute_instance" "Nginx1" {
   name        = "Nginx1"
