@@ -14,7 +14,7 @@ folder_id = "b1g6v0h3tgtvb9189u9c"
 zone      = "ru-central1-c"
 }
 resource "yandex_compute_instance" "Nginx1" {
-  name        = "Nginx1"
+  name        = "nginx1"
   platform_id = "standard-v3"
   zone        = "ru-central1-c"
 
@@ -42,7 +42,7 @@ resource "yandex_compute_instance" "Nginx1" {
  }
 
 resource "yandex_vpc_network" "network1" {
-  name = "network1"
+  name = "my-network"
 }
 
 resource "yandex_vpc_subnet" "subnet2" {
@@ -53,7 +53,7 @@ resource "yandex_vpc_subnet" "subnet2" {
 }
 
 resource "yandex_compute_instance" "Nginx2"{
-  name        = "Nginx2-vm"
+  name        = "nginx2-vm"
   platform_id = "standard-v3"
   zone        = "ru-central1-b"
 
@@ -81,7 +81,7 @@ resource "yandex_compute_instance" "Nginx2"{
 }
 
 resource "yandex_compute_instance" "Elastick" {
-  name        = "Elastick-vm"
+  name        = "elastick-vm"
   platform_id = "standard-v3"
   zone        = "ru-central1-b"
 
@@ -207,10 +207,8 @@ resource "yandex_alb_load_balancer" "balancer" {
   }
 }
 
-
-
 resource "yandex_compute_instance" "Zabbix" {
-  name        = "Zabbix-vm"
+  name        = "zabbix-vm"
   platform_id = "standard-v3"
   zone        = "ru-central1-a"
   resources {
@@ -228,7 +226,7 @@ resource "yandex_compute_instance" "Zabbix" {
   network_interface {
     subnet_id = yandex_vpc_subnet.subnet1.id
     nat       = true
-    ip_address = "192.168.0.50/24"
+    #ip_address = "192.168.0.50/24"
     ipv4      = true
   }
 
@@ -252,7 +250,7 @@ output "external_ip_address_Zabbix" {
 }
 
 resource "yandex_compute_instance" "Kibana" {
-  name        = "Kibana-vm"
+  name        = "kibana-vm"
   platform_id = "standard-v3"
   zone        = "ru-central1-a"
   resources {
@@ -270,7 +268,7 @@ resource "yandex_compute_instance" "Kibana" {
   network_interface {
     subnet_id = yandex_vpc_subnet.subnet1.id
     nat       = true
-    ip_address = "192.168.0.51/24"
+    #ip_address = "192.168.0.51/24"
     ipv4      = true
   }
 
