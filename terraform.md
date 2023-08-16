@@ -288,67 +288,67 @@ output "external_ip_address_Kibana" {
 # Создаем группы безопасности 
 # Группа для веб серверов 
 resource "yandex_vpc_security_group" "sg1" {
-  name        = "security group"
-  description = "Description for security group"
+  name        = "security group1"
+  description = "Description for security group1"
   network_id  = "${yandex_vpc_network.network1.id}"
 # Правила для балансировщика нагрузки
   ingress {
     protocol       = "HTTP"
     description    = "Rule description 1"
     v4_cidr_blocks = ["192.168.0.0/24"]
-    port           = "80"
+    port           = 80
   }
   egress {
     protocol       = "HTTP"
     description    = "Rule description 2"
     v4_cidr_blocks = ["192.168.0.0/24"]
-    port           = "80"
+    port           = 80
   }
 #Правила для забикса
   ingress {
     protocol       = "TCP"
     description    = "Rule description 3"
     v4_cidr_blocks = ["192.168.0.0/24"]
-    port           = "10050"
+    port           = 10050
  }
   egress {
     protocol       = "TCP"
     description    = "Rule description 4"
     v4_cidr_blocks = ["192.168.0.0/24"]
-    port           = "10050"
+    port           = 10050
  }
 # Правило для Filebit и Elactick
   egress {
     protocol       = "TCP"
     description    = "Rule description 5"
     v4_cidr_blocks = ["172.16.0.0/24"]
-    port           = "9200"
+    port           = 9200
  }
 # Правила для SSH (потом укажу подсеть из которой буду рулить ансеблом)
   ingress {
     protocol       = "TCP"
     description    = "Rule description 6"
-    v4_cidr_blocks = ["0.0.0.0/0""], ["192.168.0.0/0"]
-    port           = "22"
+    v4_cidr_blocks = ["0.0.0.0/0"], ["192.168.0.0/0"]
+    port           = 22
   }
 }
 # Создаем группу для Elastick
 resource "yandex_vpc_security_group" "sg2" {
-  name        = "security group"
-  description = "Description for security group"
+  name        = "security group2"
+  description = "Description for security group2"
   network_id  = "${yandex_vpc_network.network1.id}"
 # Правила для Kibana
   ingress {
     protocol       = "HTTP"
     description    = "Rule description 1"
     v4_cidr_blocks = ["192.168.0.0/24"]
-    port           = "5601"
+    port           = 5601
   }
   egress {
     protocol       = "TCP"
     description    = "Rule description 2"
     v4_cidr_blocks = ["192.168.0.0/24"]
-    port           = "5601"
+    port           = 5601
  }
 #Правила для забикса
   ingress {
@@ -361,48 +361,48 @@ resource "yandex_vpc_security_group" "sg2" {
     protocol       = "TCP"
     description    = "Rule description 4"
     v4_cidr_blocks = ["192.168.0.0/24"]
-    port           = "10050"
+    port           = 10050
  }
 # Правила для Filebit
   ingress {
     protocol       = "TCP"
     description    = "Rule description 5"
     v4_cidr_blocks = ["172.16.0.0/24"], ["10.0.2.0/24"]
-    from_port      = "9200"
-    to_port        = "9400"
+    from_port      = 9200
+    to_port        = 9400
  }
   egress {
     protocol       = "TCP"
     description    = "Rule description 6"
     v4_cidr_blocks = ["172.16.0.0/24"], ["10.0.2.0/24"]
-    from_ port     = "9200"
-    to_port        = "9400"
+    from_port      = 9200
+    to_port        = 9400
  }
 # Правило SSH (потом укажу подсеть из которой буду рулить ансеблом)
   ingress {
     protocol       = "TCP"
     description    = "Rule description 7"
     v4_cidr_blocks = ["0.0.0.0/0"], ["192.168.0.0/0"]
-    port           = "22"
+    port           = 22
   }
 }
 # Создаем группу для BastionVM (потом укажу подсеть из которой буду рулить ансеблом)
 resource "yandex_vpc_security_group" "sg3" {
-  name        = "security group"
-  description = "Description for security group"
+  name        = "security group3"
+  description = "Description for security group3"
   network_id  = "${yandex_vpc_network.network1.id}"
 
   ingress {
     protocol       = "TCP"
     description    = "Rule description 1"
     v4_cidr_blocks = ["0.0.0.0/0"], ["172.16.0.0/24"], ["10.0.2.0/24"], ["192.168.0.0/0"]
-    port           = "22"
+    port           = 22
   }
   egress {
     protocol       = "TCP"
     description    = "Rule description 2"
     v4_cidr_blocks = ["0.0.0.0/0""], ["172.16.0.0/24"], ["10.0.2.0/24"], ["192.168.0.0/0"]
-    port           = "22"
+    port           = 22
   }
 }
 
