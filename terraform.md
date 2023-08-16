@@ -284,6 +284,110 @@ output "internal_ip_address_Kibana" {
 output "external_ip_address_Kibana" {
   value = yandex_compute_instance.Kibana.network_interface.0.nat_ip_address
 }
+# Создаем группы безопасности 
+# Группа для веб серверов 
+resource "yandex_vpc_security_group" "sg1" {
+  name        = "security group"
+  description = "Description for security group"
+  network_id  = "${yandex_vpc_network.network1.id}"
+# Правила для балансировщика нагрузки
+  ingress {
+    protocol       = "HTTP"
+    description    = "Rule description 1"
+    v4_cidr_blocks = ["192.168.0.0/24""]
+    port           = "80"
+  }
+  egress {
+    protocol       = "HTTP"
+    description    = "Rule description 2"
+    v4_cidr_blocks = ["192.168.0.0/24"]
+    port           = "80"
+  }
+#Правила для забикса
+  ingress {
+    protocol       = "TCP"
+    description    = "rule description 3"
+    v4_cidr_blocks = ["192.168.0.0/24"]
+    port           = 10050
+ }
+  egress {
+    protocol       = "TCP"
+    description    = "rule description 4"
+    v4_cidr_blocks = ["192.168.0.0/24"]
+    port           = "10050"
+ }
+# Правило для Filebit и Elactick
+  egress {
+    protocol       = "TCP"
+    description    = "rule description 5"
+    v4_cidr_blocks = ["172.16.0.0/24"]
+    port           = "9200"
+ }
+# Правила для SSH
+  ingress {
+    protocol       = "SSH"
+    description    = "Rule description 6"
+    v4_cidr_blocks = ["0.0.0.0/0""]
+    port           = "22"
+  }
+}
+# Создаем группу для Elastick
+resource "yandex_vpc_security_group" "sg2" {
+  name        = "security group"
+  description = "Description for security group"
+  network_id  = "${yandex_vpc_network.network1.id}"
+# Правила для Kibana
+  ingress {
+    protocol       = "HTTP"
+    description    = "Rule description 1"
+    v4_cidr_blocks = ["192.168.0.0/24""]
+    port           = "5601"
+  }
+  egress {
+    protocol       = "TCP"
+    description    = "rule description 2"
+    v4_cidr_blocks = ["192.168.0.0/24"]
+    port           = "5601"
+ }
+#Правила для забикса
+  ingress {
+    protocol       = "TCP"
+    description    = "rule description 3"
+    v4_cidr_blocks = ["192.168.0.0/24"]
+    port           = 10050
+ }
+  egress {
+    protocol       = "TCP"
+    description    = "rule description 4"
+    v4_cidr_blocks = ["192.168.0.0/24"]
+    port           = "10050"
+ }
+# Правила для Filebit
+  ingress {
+    protocol       = "TCP"
+    description    = "rule description 5"
+    v4_cidr_blocks = ["172.16.0.0/24"], ["10.0.2.0/24"]
+    from_port      = "9200"
+    to_port        = "9400"
+ }
+  egress {
+    protocol       = "TCP"
+    description    = "rule description 6"
+    v4_cidr_blocks = ["172.16.0.0/24"], ["10.0.2.0/24"]
+    from_ port     = "9200"
+    to_port        = "9400"
+ }
+# Правило SSH
+  ingress {
+    protocol       = "SSH"
+    description    = "Rule description 6"
+    v4_cidr_blocks = ["0.0.0.0/0""]
+    port           = "22"
+  }
+}
+
+
+
 
 
 
