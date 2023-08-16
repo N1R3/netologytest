@@ -309,7 +309,7 @@ resource "yandex_vpc_security_group" "sg1" {
     protocol       = "TCP"
     description    = "Rule description 3"
     v4_cidr_blocks = ["192.168.0.0/24"]
-    port           = 10050
+    port           = "10050"
  }
   egress {
     protocol       = "TCP"
