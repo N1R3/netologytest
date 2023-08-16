@@ -169,7 +169,7 @@ resource "yandex_alb_backend_group" "backend-group" {
     }
 
     healthcheck {
-      timeout = "3s"
+      timeout = "50s"
       interval = "3s"
       http_healthcheck {
        path  = "/"
@@ -295,7 +295,7 @@ resource "yandex_vpc_security_group" "sg1" {
   ingress {
     protocol       = "HTTP"
     description    = "Rule description 1"
-    v4_cidr_blocks = ["192.168.0.0/24""]
+    v4_cidr_blocks = ["192.168.0.0/24"]
     port           = "80"
   }
   egress {
@@ -341,7 +341,7 @@ resource "yandex_vpc_security_group" "sg2" {
   ingress {
     protocol       = "HTTP"
     description    = "Rule description 1"
-    v4_cidr_blocks = ["192.168.0.0/24""]
+    v4_cidr_blocks = ["192.168.0.0/24"]
     port           = "5601"
   }
   egress {
@@ -382,7 +382,7 @@ resource "yandex_vpc_security_group" "sg2" {
   ingress {
     protocol       = "TCP"
     description    = "Rule description 7"
-    v4_cidr_blocks = ["0.0.0.0/0""], ["192.168.0.0/0"]
+    v4_cidr_blocks = ["0.0.0.0/0"], ["192.168.0.0/0"]
     port           = "22"
   }
 }
@@ -395,7 +395,7 @@ resource "yandex_vpc_security_group" "sg3" {
   ingress {
     protocol       = "TCP"
     description    = "Rule description 1"
-    v4_cidr_blocks = ["0.0.0.0/0""], ["172.16.0.0/24"], ["10.0.2.0/24"], ["192.168.0.0/0"]
+    v4_cidr_blocks = ["0.0.0.0/0"], ["172.16.0.0/24"], ["10.0.2.0/24"], ["192.168.0.0/0"]
     port           = "22"
   }
   egress {
