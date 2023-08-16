@@ -324,11 +324,11 @@ resource "yandex_vpc_security_group" "sg1" {
     v4_cidr_blocks = ["172.16.0.0/24"]
     port           = "9200"
  }
-# Правила для SSH
+# Правила для SSH (потом укажу подсеть из которой буду рулить ансеблом)
   ingress {
-    protocol       = "SSH"
+    protocol       = "TCP"
     description    = "Rule description 6"
-    v4_cidr_blocks = ["0.0.0.0/0""]
+    v4_cidr_blocks = ["0.0.0.0/0""], ["192.168.0.0/0"]
     port           = "22"
   }
 }
@@ -378,14 +378,36 @@ resource "yandex_vpc_security_group" "sg2" {
     from_ port     = "9200"
     to_port        = "9400"
  }
-# Правило SSH
+# Правило SSH (потом укажу подсеть из которой буду рулить ансеблом)
   ingress {
-    protocol       = "SSH"
+    protocol       = "TCP"
     description    = "Rule description 7"
-    v4_cidr_blocks = ["0.0.0.0/0""]
+    v4_cidr_blocks = ["0.0.0.0/0""], ["192.168.0.0/0"]
     port           = "22"
   }
 }
+# Создаем группу для BastionVM (потом укажу подсеть из которой буду рулить ансеблом)
+resource "yandex_vpc_security_group" "sg3" {
+  name        = "security group"
+  description = "Description for security group"
+  network_id  = "${yandex_vpc_network.network1.id}"
+
+  ingress {
+    protocol       = "TCP"
+    description    = "Rule description 1"
+    v4_cidr_blocks = ["0.0.0.0/0""], ["172.16.0.0/24"], ["10.0.2.0/24"], ["192.168.0.0/0"]
+    port           = "22"
+  }
+  egress {
+    protocol       = "TCP"
+    description    = "Rule description 2"
+    v4_cidr_blocks = ["0.0.0.0/0""], ["172.16.0.0/24"], ["10.0.2.0/24"], ["192.168.0.0/0"]
+    port           = "22"
+  }
+}
+
+
+
 
 
 
